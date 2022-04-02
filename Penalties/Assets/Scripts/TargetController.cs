@@ -3,9 +3,16 @@ using UnityEngine;
 public class TargetController : MonoBehaviour
 {
     [SerializeField]
+    Transform posteEsquerdo, trave, posteDireito, baliza;
+
     private InputManager inputManager;
-    [SerializeField]
     private Camera mainCamera;
+
+    private void Awake()
+    {
+        inputManager = InputManager.Instance;
+        mainCamera = Camera.main;
+    }
 
     private void OnEnable()
     {
@@ -17,16 +24,15 @@ public class TargetController : MonoBehaviour
         inputManager.OnStartTouch -= Move;
     }
 
-    public void Move(Vector2 screenPosition, float time)
+    private void Move(Vector2 screenPosition)
     {
         Vector3 worldCoordinates = mainCamera.ScreenToWorldPoint(screenPosition);
         worldCoordinates.z = transform.position.z;
-        if(worldCoordinates.x > -2.5 && worldCoordinates.x < 2.5)
-        {
-            if(worldCoordinates.y > 2 && worldCoordinates.y < 4.5)
-            {
-                transform.position = worldCoordinates;
-            }
-        }
+
+        if(worldCoordinates.x < posteEsquerdo.position.x || worldCoordinates.x > posteDireito.position.x) return;
+
+        if(worldCoordinates.y < baliza.position.y || worldCoordinates.y > trave.position.y) return;
+
+        transform.position = worldCoordinates;
     }
 }
