@@ -54,5 +54,6 @@ public enum GameState
     KeeperReady,
     Shooting,
     Scored,
-    Saved
+    Saved,
+    Reset
 }

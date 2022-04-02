@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -41,6 +42,7 @@ public class InputManager : MonoBehaviour
     private void Start()
     {
         touchControls.Touch.TouchPress.started += ctx => StartTouch(ctx);
+        touchControls.Touch.TouchPress.canceled += ctx => EndTouch(ctx);
     }
 
     private void OnGameStateChanged(GameState newState)
@@ -48,13 +50,32 @@ public class InputManager : MonoBehaviour
         gameState = newState;
     }
 
+    Coroutine touching;
+
     private void StartTouch(InputAction.CallbackContext context)
     {
         if(gameState != GameState.Idle) return;
         
         if(OnStartTouch != null)
         {
+            touching = StartCoroutine("OnStartTouchCourotine");
+        }
+    }
+
+    private void EndTouch(InputAction.CallbackContext context)
+    {        
+        if(OnStartTouch != null)
+        {
+            StopCoroutine(touching);
+        }
+    }
+
+    IEnumerator OnStartTouchCourotine()
+    {
+        while(true)
+        {
             OnStartTouch(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
+            yield return null;
         }
     }
 }

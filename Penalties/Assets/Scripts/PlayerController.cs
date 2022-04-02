@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     private InputManager inputManager;
     private Camera mainCamera;
     private BallController ballController;
+    private Transform target;
 
     Vector3 startPosition;
 
@@ -16,12 +17,16 @@ public class PlayerController : MonoBehaviour
 
     GameState gameState;
 
+    int inverted = -1;
+
     private void Awake()
     {
         inputManager = InputManager.Instance;
         mainCamera = Camera.main;
         ballController = FindObjectOfType<BallController>();
+        target = FindObjectOfType<TargetController>().transform;
         GameManager.OnGameStateChanged += OnGameStateChanged;
+        UpdateTargetAndLine();
     }
 
     private void OnDestroy()
@@ -61,13 +66,12 @@ public class PlayerController : MonoBehaviour
         worldCoordinates.y = transform.position.y;
 
         transform.position = worldCoordinates;
+        UpdateTargetAndLine();
     }
 
     public async void RunAndShoot(Vector3 position)
     {
-        GameManager.Instance.UpdateGameState(GameState.GoingToShoot);
-
-        await WaitUntil(() => gameState == GameState.KeeperReady);
+        await GlobalTools.WaitUntil(() => gameState == GameState.KeeperReady);
 
         startPosition = transform.position;
         float time = 0;
@@ -87,20 +91,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public static async Task WaitUntil(Func<bool> condition, int frequency = 25, int timeout = -1)
-    {
-        var waitTask = Task.Run(async () =>
-        {
-            while (!condition()) await Task.Delay(frequency);
-        });
-
-        if (waitTask != await Task.WhenAny(waitTask, 
-                Task.Delay(timeout))) 
-            throw new TimeoutException();
-    }
-
     public void SetPower(float _power)
     {
         power = 1 + _power * 2;
+    }
+
+    public void ToggleInverted()
+    {
+        inverted *= -1;
+        ballController.inverted *= -1;
+        UpdateTargetAndLine();
+    }
+
+    private void UpdateTargetAndLine()
+    {
+        target.position = new Vector3(inverted * transform.position.x, target.position.y, target.position.z);
+        ballController.UpdateLineRenderer();
     }
 }

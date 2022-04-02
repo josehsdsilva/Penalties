@@ -20,6 +20,10 @@ public class KeeperController : MonoBehaviour
     {
         startPosition = transform.position;
         GameManager.OnGameStateChanged += OnGameStateChanged;
+    }
+
+    private void Start()
+    {
         IdleMovement();
     }
 
@@ -49,6 +53,9 @@ public class KeeperController : MonoBehaviour
             transform.position = Vector3.Lerp(startPosition, targetPosition, time);
             await Task.Delay(1);
         }
+
+        await GlobalTools.WaitUntil(() => gameState == GameState.Reset);
+
         time = 0;
         while(time < 1)
         {
@@ -75,7 +82,10 @@ public class KeeperController : MonoBehaviour
             await Task.Delay(1);
         }
 
+        // ToDo: ver se foi golo ou não
         GameManager.Instance.UpdateGameState(GameState.Scored);
+
+        GameManager.Instance.UpdateGameState(GameState.Reset);
 
         GoBackToStartPosition();
     }
@@ -101,8 +111,9 @@ public class KeeperController : MonoBehaviour
 
     private void GetRandomPosition()
     {
-        float randomX = Random.Range(0, (posteDireito.position.x - 0.5f) * 2);
-        targetPosition = new Vector3(randomX - (posteDireito.transform.position.x - 0.5f), transform.position.y, transform.position.z);
+        int randomRange = Random.Range(0, 5) + 1;
+        float randomX = posteEsquerdo.position.x + (randomRange * (posteDireito.position.x / 3));
+        targetPosition = new Vector3(randomX, transform.position.y, transform.position.z);
     }
 
     private void CheckState()

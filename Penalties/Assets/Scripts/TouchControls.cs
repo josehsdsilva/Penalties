@@ -42,7 +42,7 @@ public partial class @TouchControls : IInputActionCollection2, IDisposable
                     ""id"": ""a7ca3d61-6d30-4db6-85fe-3f73cb7ee648"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press(behavior=2)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
@@ -51,7 +51,7 @@ public partial class @TouchControls : IInputActionCollection2, IDisposable
                     ""id"": ""b7dcd032-b257-4f0b-854c-1a66be95bd47"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
-                    ""interactions"": ""Press(behavior=2)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 }
             ],
