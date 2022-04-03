@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private BallController ballController;
     private Transform target;
-    private Vector3 startPosition;
+    private Vector3 startPosition, targetPosition;
     private float power = 1;
     private int inverted = -1;
 
@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
 
     #region Input Methods
 
+    // Posicionar o Jogador
     private void PositionWithInput(Vector2 screenPosition)
     {
         if(firstClick)
@@ -83,33 +84,48 @@ public class PlayerController : MonoBehaviour
     #endregion Input Methods
 
     #region Mechanics Methods
-    public async void RunAndShoot(Vector3 position)
+    public async void RunAndShoot()
     {
+        if(gameState != GameState.Idle) return;
+
+        GameManager.Instance.UpdateGameState(GameState.GoingToShoot);
+
+        ballController.ShowLineRenderer(false);
+
+        // Esperar até o GK estar pronto
         await GlobalTools.WaitUntil(() => gameState == GameState.KeeperReady);
 
+        // Correr até à bola
         startPosition = transform.position;
+        targetPosition = ballController.transform.position;
         float time = 0;
         while(time < 1)
         {
             time += Time.deltaTime * power;
-            transform.position = Vector3.Lerp(startPosition, position, time);
+            transform.position = Vector3.Lerp(startPosition, targetPosition, time);
             await Task.Delay(1);
         }
+
+        // Chutar a bola
         ballController.Shoot(power);
+
+        // Voltar à posição inicial
         time = 0;
         while(time < 1)
         {
             time += Time.deltaTime / 2;
-            transform.position = Vector3.Lerp(position, startPosition, time);
+            transform.position = Vector3.Lerp(targetPosition, startPosition, time);
             await Task.Delay(1);
         }
     }
 
+    // Definir a força de remate
     public void SetPower(float _power)
     {
         power = 1 + _power * 2;
     }
 
+    // Inverter a direção do remate
     public void ToggleInverted()
     {
         inverted *= -1;

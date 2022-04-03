@@ -67,6 +67,26 @@ public class GameManager : MonoBehaviour
         OnGameStateChanged?.Invoke(newState);
     }
 
+    public void NextPenaltie()
+    {
+        UpdateGameState(GameState.Reset);
+    }
+
+    public void ResetGame()
+    {
+        UpdateGameState(GameState.GameReset);
+        UpdateGameState(GameState.Reset);
+    }
+
+    public void QuitGame()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
+    }
+
     #endregion GameState
 }
 

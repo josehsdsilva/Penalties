@@ -12,16 +12,15 @@ public class BallController : MonoBehaviour
 
     private GameState gameState;
 
-    private InputManager inputManager;
     private Camera mainCamera;
 
-    private PlayerController player;
     private TargetController target;
     private LineRenderer lineRenderer;
     [HideInInspector] public int inverted = 1;
     private Vector3 startPosition;
     private Vector3 targetPosition;
     private SpriteRenderer spriteRenderer;
+    private float shootingPower;
 
     #endregion Variables
 
@@ -31,9 +30,7 @@ public class BallController : MonoBehaviour
     {
         GameManager.OnGameStateChanged += OnGameStateChanged;
 
-        inputManager = InputManager.Instance;
         mainCamera = Camera.main;
-        player = FindObjectOfType<PlayerController>();
         target = FindObjectOfType<TargetController>();
         lineRenderer = GetComponent<LineRenderer>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -47,56 +44,53 @@ public class BallController : MonoBehaviour
         GameManager.OnGameStateChanged -= OnGameStateChanged;
     }
 
-    private void OnEnable()
-    {
-        inputManager.OnStartTouch += ClickedWithInput;
-    }
-
-    private void OnDisable()
-    {
-        inputManager.OnStartTouch -= ClickedWithInput;
-    }
-
     private void OnGameStateChanged(GameState newState)
     {
         gameState = newState;
+
+        switch (gameState)
+        {
+            case GameState.Saved:
+                spriteRenderer.color = Color.red;
+                break;
+            case GameState.Reset:
+                spriteRenderer.color = Color.white;
+                break;
+        }
     }
 
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(gameState != GameState.Shooting) return;
-        if(collision.gameObject.tag == "Player")
+
+        if(collision.gameObject.tag == "Baliza")
         {
             ChangeSortingLayer(Vector3.zero, true);
             GameManager.Instance.UpdateGameState(GameState.Saved);
+        }
+        else if(collision.gameObject.tag == "Player")
+        {
+            if(shootingPower > 2f) // Pelo menos meia barra de força
+            {
+                if(Random.Range(0, 100) < 50 / 3 * shootingPower) // 50% de chance de ser golo com a força maxima
+                {
+                    GameManager.Instance.UpdateGameState(GameState.Scored);
+                    return;
+                }
+            }
+            GameManager.Instance.UpdateGameState(GameState.Saved);
+            ChangeSortingLayer(Vector3.zero, true);
         }
     }
 
     #endregion Unity Methods
 
-    #region Input Methods
-
-    private void ClickedWithInput(Vector2 screenPosition)
-    {
-        Vector3 worldCoordinates = mainCamera.ScreenToWorldPoint(screenPosition);
-        worldCoordinates.z = transform.position.z;
-
-        if(IsInsideCircle(worldCoordinates.x, worldCoordinates.y))
-        {
-            GameManager.Instance.UpdateGameState(GameState.GoingToShoot);
-
-            player.RunAndShoot(transform.position);
-            lineRenderer.enabled = false;
-        }
-    }
-
-    #endregion Input Methods
-    
     #region Mechanics Methods
 
     public async void Shoot(float power)
     {
+        shootingPower = power;
         GameManager.Instance.UpdateGameState(GameState.Shooting);
         targetPosition = GetRealTargetPosition(target.transform.position, power);
         target.gameObject.SetActive(false);
@@ -111,9 +105,9 @@ public class BallController : MonoBehaviour
             await Task.Delay(1);
         }
 
-        if(gameState != GameState.Saved)
+        if(gameState != GameState.Saved && gameState != GameState.Scored)
         {
-            if(spriteRenderer.sortingOrder == 1)
+            if(spriteRenderer.sortingOrder == 2)
             {
                 GameManager.Instance.UpdateGameState(GameState.Saved);
             }
@@ -127,12 +121,17 @@ public class BallController : MonoBehaviour
         
         target.gameObject.SetActive(true);
         transform.position = startPosition;
-        lineRenderer.enabled = true;
+        ShowLineRenderer(true);
     }
 
     #endregion Mechanics Methods
 
     #region Helper Methods
+
+    public void ShowLineRenderer(bool show)
+    {
+        lineRenderer.enabled = show;
+    }
 
     public void UpdateLineRenderer()
     {
@@ -156,12 +155,6 @@ public class BallController : MonoBehaviour
 
         return new Vector3(x, y, z);
     }
-    private bool IsInsideCircle( float x, float y )
-    {  
-        float dx = Mathf.Abs(x - transform.position.x);
-        float dy = Mathf.Abs(y - transform.position.y);
-        return ( dx * dx + dy * dy <= transform.localScale.x * transform.localScale.y );
-    }
 
     private Vector3 GetRealTargetPosition(Vector3 targetPos, float power)
     {
@@ -176,8 +169,8 @@ public class BallController : MonoBehaviour
 
     private void ChangeSortingLayer(Vector3 targetPos, bool saved = false)
     {
-        if(saved) spriteRenderer.sortingOrder = 1;
-        else spriteRenderer.sortingOrder = targetPos.y < trave.position.y && targetPos.x > posteEsquerdo.position.x + goalOffet && targetPos.x < posteDireito.position.x - goalOffet ? -1 : 1;
+        if(saved) spriteRenderer.sortingOrder = 2;
+        else spriteRenderer.sortingOrder = targetPos.y < trave.position.y && targetPos.x > posteEsquerdo.position.x + goalOffet && targetPos.x < posteDireito.position.x - goalOffet ? -1 : 2;
     }
     
     #endregion Helper Methods

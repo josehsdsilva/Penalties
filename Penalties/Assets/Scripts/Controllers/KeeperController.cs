@@ -86,16 +86,12 @@ public class KeeperController : MonoBehaviour
         float time = 0;
         while(time < 1)
         {
-            time += Time.deltaTime * 2;
-            transform.position = Vector3.Lerp(startPosition, targetPosition, time);
+            time += Time.deltaTime * 3;
+            if(gameState != GameState.Saved) transform.position = Vector3.Lerp(startPosition, targetPosition, time);
             await Task.Delay(1);
         }
 
-        await GlobalTools.WaitUntil(() => gameState == GameState.Scored || gameState == GameState.Saved);
-
-        await GlobalTools.WaitForSeconds(2);
-
-        GameManager.Instance.UpdateGameState(GameState.Reset);
+        await GlobalTools.WaitUntil(() => gameState == GameState.Reset);
 
         GoBackToStartPosition();
     }

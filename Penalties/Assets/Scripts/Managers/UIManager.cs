@@ -56,10 +56,6 @@ public class UIManager : MonoBehaviour
         statisticsPanel.SetActive(true);
         double percentage = Math.Round(((double)scored / (double)goalAttempts) * 100, 2);
         statisticsText.text = $"Golos Marcados: {scored} / {goalAttempts} \nPercentagem de acerto: {percentage}%";
-
-        await GlobalTools.WaitForSeconds(2);
-        statisticsPanel.SetActive(false);
-        GameManager.Instance.UpdateGameState(GameState.Reset);
     }
 
     #endregion Update UI
