@@ -5,26 +5,28 @@ using UnityEngine;
 
 public class KeeperController : MonoBehaviour
 {
-    [SerializeField]
-    Transform posteEsquerdo, posteDireito;
+    #region Variables
 
-    Vector3 startPosition;
-    Vector3 targetPosition;
-
-    int side = 0;
+    [SerializeField] private Transform posteEsquerdo, posteDireito;
 
     private GameState gameState;
-    bool onIdleAnimation = false;
+
+    private Vector3 startPosition;
+    private Vector3 targetPosition;
+
+    private int side = 0;
+
+    private bool onIdleAnimation = false;
+
+    #endregion Variables
+
+    #region MonoBehaviour
 
     private void Awake()
     {
-        startPosition = transform.position;
         GameManager.OnGameStateChanged += OnGameStateChanged;
-    }
 
-    private void Start()
-    {
-        IdleMovement();
+        startPosition = transform.position;
     }
 
     private void OnDestroy()
@@ -32,12 +34,20 @@ public class KeeperController : MonoBehaviour
         GameManager.OnGameStateChanged -= OnGameStateChanged;
     }
 
+    #endregion MonoBehaviour
+
+    #region GameState
+
     private void OnGameStateChanged(GameState newState)
     {
         gameState = newState;
         if(gameState == GameState.Idle && !onIdleAnimation) IdleMovement();
         if(gameState == GameState.Shooting) TryToDefend();
     }
+
+    #endregion GameState
+
+    #region Mechanics Methods
 
     private async void IdleMovement()
     {
@@ -54,8 +64,6 @@ public class KeeperController : MonoBehaviour
             await Task.Delay(1);
         }
 
-        await GlobalTools.WaitUntil(() => gameState == GameState.Reset);
-
         time = 0;
         while(time < 1)
         {
@@ -70,6 +78,7 @@ public class KeeperController : MonoBehaviour
         onIdleAnimation = false;
         CheckState();
     }
+
     private async void TryToDefend()
     {
         GetRandomPosition();
@@ -82,8 +91,9 @@ public class KeeperController : MonoBehaviour
             await Task.Delay(1);
         }
 
-        // ToDo: ver se foi golo ou não
-        GameManager.Instance.UpdateGameState(GameState.Scored);
+        await GlobalTools.WaitUntil(() => gameState == GameState.Scored || gameState == GameState.Saved);
+
+        await GlobalTools.WaitForSeconds(2);
 
         GameManager.Instance.UpdateGameState(GameState.Reset);
 
@@ -104,6 +114,10 @@ public class KeeperController : MonoBehaviour
         GameManager.Instance.UpdateGameState(GameState.Idle);
     }
 
+    #endregion Mechanics Methods
+
+    #region Helper Methods
+
     private void UpdateTargetPosition()
     {
         targetPosition = side == 0 ? new Vector3(posteEsquerdo.position.x + 0.5f, transform.position.y, transform.position.z) : new Vector3(posteDireito.position.x - 0.5f, transform.position.y, transform.position.z);
@@ -121,4 +135,6 @@ public class KeeperController : MonoBehaviour
         if(gameState == GameState.Idle) IdleMovement();
         else if(gameState == GameState.GoingToShoot) GameManager.Instance.UpdateGameState(GameState.KeeperReady);
     }
+
+    #endregion Helper Methods
 }

@@ -4,28 +4,32 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    #region Variables
+
+    private GameState gameState;
+
     private InputManager inputManager;
     private Camera mainCamera;
     private BallController ballController;
     private Transform target;
+    private Vector3 startPosition;
+    private float power = 1;
+    private int inverted = -1;
 
-    Vector3 startPosition;
+    private bool firstClick = true;
 
-    float power = 1;
+    #endregion Variables
 
-    bool firstClick = true;
-
-    GameState gameState;
-
-    int inverted = -1;
-
+    #region MonoBehaviour
     private void Awake()
     {
+        GameManager.OnGameStateChanged += OnGameStateChanged;
+
         inputManager = InputManager.Instance;
         mainCamera = Camera.main;
         ballController = FindObjectOfType<BallController>();
         target = FindObjectOfType<TargetController>().transform;
-        GameManager.OnGameStateChanged += OnGameStateChanged;
+
         UpdateTargetAndLine();
     }
 
@@ -36,21 +40,28 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        inputManager.OnStartTouch += Position;
+        inputManager.OnStartTouch += PositionWithInput;
     }
 
     private void OnDisable()
     {
-        inputManager.OnStartTouch -= Position;
+        inputManager.OnStartTouch -= PositionWithInput;
     }
 
-    
+    #endregion MonoBehaviour
+
+    #region GameState
+
     private void OnGameStateChanged(GameState newState)
     {
         gameState = newState;
     }
 
-    private void Position(Vector2 screenPosition)
+    #endregion GameState
+
+    #region Input Methods
+
+    private void PositionWithInput(Vector2 screenPosition)
     {
         if(firstClick)
         {
@@ -69,6 +80,9 @@ public class PlayerController : MonoBehaviour
         UpdateTargetAndLine();
     }
 
+    #endregion Input Methods
+
+    #region Mechanics Methods
     public async void RunAndShoot(Vector3 position)
     {
         await GlobalTools.WaitUntil(() => gameState == GameState.KeeperReady);
@@ -103,9 +117,15 @@ public class PlayerController : MonoBehaviour
         UpdateTargetAndLine();
     }
 
+    #endregion Mechanics Methods
+
+    #region Helper Methods
+
     private void UpdateTargetAndLine()
     {
         target.position = new Vector3(inverted * transform.position.x, target.position.y, target.position.z);
         ballController.UpdateLineRenderer();
     }
+
+    #endregion Helper Methods
 }

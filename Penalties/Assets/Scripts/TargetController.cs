@@ -2,21 +2,28 @@ using UnityEngine;
 
 public class TargetController : MonoBehaviour
 {
-    [SerializeField]
-    Transform posteEsquerdo, trave, posteDireito, baliza;
+    #region Variables
+
+    [SerializeField] private Transform posteEsquerdo, trave, posteDireito, baliza;
+
+    private GameState gameState;
 
     private InputManager inputManager;
     private Camera mainCamera;
 
     private BallController ballController;
-    GameState gameState;
+
+    #endregion Variables
+
+    #region MonoBehaviour
 
     private void Awake()
     {
+        GameManager.OnGameStateChanged += OnGameStateChanged;
+
         inputManager = InputManager.Instance;
         mainCamera = Camera.main;
         ballController = FindObjectOfType<BallController>();
-        GameManager.OnGameStateChanged += OnGameStateChanged;
     }
 
     private void OnDestroy()
@@ -24,25 +31,31 @@ public class TargetController : MonoBehaviour
         GameManager.OnGameStateChanged -= OnGameStateChanged;
     }
 
+    private void OnEnable()
+    {
+        inputManager.OnStartTouch += MoveWithInput;
+    }
+
+    private void OnDisable()
+    {
+        inputManager.OnStartTouch -= MoveWithInput;
+    }
+
+    #endregion MonoBehaviour
+
+    #region GameState
+
     private void OnGameStateChanged(GameState newState)
     {
         gameState = newState;
     }
 
-    private void OnEnable()
-    {
-        inputManager.OnStartTouch += Move;
-    }
+    #endregion GameState
 
-    private void OnDisable()
-    {
-        inputManager.OnStartTouch -= Move;
-    }
+    #region Input Methods
 
-    private void Move(Vector2 screenPosition)
+    private void MoveWithInput(Vector2 screenPosition)
     {
-        if(gameState != GameState.Idle) return;
-        
         Vector3 worldCoordinates = mainCamera.ScreenToWorldPoint(screenPosition);
         worldCoordinates.x = transform.position.x; 
         worldCoordinates.z = transform.position.z;
@@ -52,4 +65,6 @@ public class TargetController : MonoBehaviour
         transform.position = worldCoordinates;
         ballController.UpdateLineRenderer();
     }
+
+    #endregion Input Methods
 }

@@ -10,6 +10,8 @@ public class InputManager : MonoBehaviour
     public static InputManager Instance { get; private set; }
     #endregion Singleton
 
+    #region Variables
+
     public delegate void StartTouchEvent(Vector2 position);
     public event StartTouchEvent OnStartTouch;
 
@@ -17,11 +19,19 @@ public class InputManager : MonoBehaviour
 
     private GameState gameState;
 
+    private Coroutine touching;
+
+    #endregion Variables
+
+    #region MonoBehaviour
+
     private void Awake()
     {
-        touchControls = new TouchControls();
         Instance = this;
+
         GameManager.OnGameStateChanged += OnGameStateChanged;
+
+        touchControls = new TouchControls();
     }
 
     private void OnDestroy()
@@ -45,12 +55,18 @@ public class InputManager : MonoBehaviour
         touchControls.Touch.TouchPress.canceled += ctx => EndTouch(ctx);
     }
 
+    #endregion MonoBehaviour
+
+    #region GameState
+
     private void OnGameStateChanged(GameState newState)
     {
         gameState = newState;
     }
 
-    Coroutine touching;
+    #endregion GameState
+
+    #region Input Methods
 
     private void StartTouch(InputAction.CallbackContext context)
     {
@@ -70,12 +86,19 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    IEnumerator OnStartTouchCourotine()
+    private IEnumerator OnStartTouchCourotine()
     {
         while(true)
         {
+            if(gameState != GameState.Idle)
+            {
+                StopCoroutine(touching);
+                break;
+            }
             OnStartTouch(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
             yield return null;
         }
     }
+    
+    #endregion Input Methods
 }

@@ -5,11 +5,21 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    #region Singleton
+
     public static GameManager Instance { get; private set; }
+
+    #endregion Singleton
+
+    #region Variables
 
     public GameState gameState;
 
     public static event Action<GameState> OnGameStateChanged;
+
+    #endregion Variables
+
+    #region MonoBehaviour
 
     private void Awake()
     {
@@ -21,32 +31,46 @@ public class GameManager : MonoBehaviour
         UpdateGameState(GameState.Idle);
     }
 
+    #endregion MonoBehaviour
+
+    #region GameState
+
     public void UpdateGameState(GameState newState)
     {
         gameState = newState;
 
-        // switch (newState)
-        // {
-        //     case GameState.Idle:
-        //         break;
-        //     case GameState.GoingToShoot:
-        //     case GameState.GoingToShoot:
-        //         break;
-        //     case GameState.Shooting:
-        //         break;
-        //     case GameState.Scored:
-        //         break;
-        //     case GameState.Saved:
-        //         break;
-        //    default:
-        //         throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
-        // }
+        switch (newState)
+        {
+            case GameState.Idle:
+                break;
+            case GameState.GoingToShoot:
+                break;
+            case GameState.KeeperReady:
+                break;
+            case GameState.Shooting:
+                break;
+            case GameState.Scored:
+                UIManager.Instance.Scored();
+                break;
+            case GameState.Saved:
+                UIManager.Instance.Saved();
+                break;
+            case GameState.Reset:
+                break;
+            case GameState.GameReset:
+                UIManager.Instance.Reset();
+                break;
+           default:
+                throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
+        }
 
         OnGameStateChanged?.Invoke(newState);
     }
+
+    #endregion GameState
 }
 
-
+#region GameState Enum
 public enum GameState
 {
     Idle,
@@ -55,5 +79,8 @@ public enum GameState
     Shooting,
     Scored,
     Saved,
-    Reset
+    Reset,
+    GameReset
 }
+
+#endregion GameState Enum
