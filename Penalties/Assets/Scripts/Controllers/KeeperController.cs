@@ -79,9 +79,14 @@ public class KeeperController : MonoBehaviour
         CheckState();
     }
 
+    public void GoingToShoot(float power, Vector3 position)
+    {
+        GetDefendingPosition(power, position);
+    }
+
     private async void TryToDefend()
     {
-        GetRandomPosition();
+        
 
         float time = 0;
         while(time < 1)
@@ -119,11 +124,20 @@ public class KeeperController : MonoBehaviour
         targetPosition = side == 0 ? new Vector3(posteEsquerdo.position.x + 0.5f, transform.position.y, transform.position.z) : new Vector3(posteDireito.position.x - 0.5f, transform.position.y, transform.position.z);
     }
 
-    private void GetRandomPosition()
+    private void GetDefendingPosition(float shootingPower, Vector3 position)
     {
-        int randomRange = Random.Range(0, 5) + 1;
-        float randomX = posteEsquerdo.position.x + (randomRange * (posteDireito.position.x / 3));
-        targetPosition = new Vector3(randomX, transform.position.y, transform.position.z);
+        int randomRange = Random.Range(0, 300) + 1;
+        if(randomRange < shootingPower * 100)
+        {
+            randomRange = Random.Range(0, 5) + 1;
+            float randomX = posteEsquerdo.position.x + (randomRange * (posteDireito.position.x / 3));
+            targetPosition = new Vector3(randomX, transform.position.y, transform.position.z);
+        }
+        else
+        {
+            targetPosition = new Vector3(position.x, transform.position.y, transform.position.z);
+        }
+        
     }
 
     private void CheckState()

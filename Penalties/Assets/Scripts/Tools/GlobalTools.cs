@@ -1,7 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using UnityEngine;
 
-public class GlobalTools
+public class GlobalTools : MonoBehaviour
 {
     #region Waiting Tasks
     
@@ -28,4 +29,15 @@ public class GlobalTools
     }
 
     #endregion Waiting Tasks
+
+    public static Vector3 GetPointInLine(Vector3 startPos, Vector3 endPos, float t, int inverted = -1)
+    {
+        Vector3 midPos = new Vector3(startPos.x - inverted * (endPos.x - startPos.x), (startPos.y + endPos.y) / 2, (startPos.z + endPos.z) / 2);
+
+        float x = ((1 - t) * (1 - t) * startPos.x) + (2 * t * (1 - t) * midPos.x) + (t * t * endPos.x);
+        float y = ((1 - t) * (1 - t) * startPos.y) + (2 * t * (1 - t) * midPos.y) + (t * t * endPos.y);
+        float z = startPos.z + (t * (endPos.z - startPos.z));
+
+        return new Vector3(x, y, z);
+    }
 }

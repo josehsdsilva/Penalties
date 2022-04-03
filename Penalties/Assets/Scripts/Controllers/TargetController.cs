@@ -5,6 +5,7 @@ public class TargetController : MonoBehaviour
     #region Variables
 
     [SerializeField] private Transform posteEsquerdo, trave, posteDireito, baliza;
+    [SerializeField] private GameObject upArrow, downArrow;
 
     private GameState gameState;
 
@@ -34,11 +35,13 @@ public class TargetController : MonoBehaviour
     private void OnEnable()
     {
         inputManager.OnStartTouch += MoveWithInput;
+        inputManager.OnEndTouch += SetArrowsVisible;
     }
 
     private void OnDisable()
     {
         inputManager.OnStartTouch -= MoveWithInput;
+        inputManager.OnEndTouch += SetArrowsVisible;
     }
 
     #endregion MonoBehaviour
@@ -62,9 +65,21 @@ public class TargetController : MonoBehaviour
 
         if(worldCoordinates.y < baliza.position.y || worldCoordinates.y > trave.position.y) return;
 
+        SetArrowsVisible(false);
+
         transform.position = worldCoordinates;
         ballController.UpdateLineRenderer();
     }
 
     #endregion Input Methods
+
+    #region Helper Methods
+
+    public  void SetArrowsVisible(bool visible)
+    {
+        upArrow.SetActive(visible);
+        downArrow.SetActive(visible);
+    }
+
+    #endregion Helper Methods
 }

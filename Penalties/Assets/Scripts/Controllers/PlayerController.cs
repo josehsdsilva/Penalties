@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     #region Variables
 
+    [SerializeField] private GameObject leftArrow, rightArrow;
+
     private GameState gameState;
 
     private InputManager inputManager;
@@ -41,11 +43,13 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         inputManager.OnStartTouch += PositionWithInput;
+        inputManager.OnEndTouch += SetArrowsVisible;
     }
 
     private void OnDisable()
     {
         inputManager.OnStartTouch -= PositionWithInput;
+        inputManager.OnEndTouch -= SetArrowsVisible;
     }
 
     #endregion MonoBehaviour
@@ -55,6 +59,11 @@ public class PlayerController : MonoBehaviour
     private void OnGameStateChanged(GameState newState)
     {
         gameState = newState;
+
+        if(gameState == GameState.Idle)
+        {
+            SetArrowsVisible(true);
+        }
     }
 
     #endregion GameState
@@ -75,6 +84,8 @@ public class PlayerController : MonoBehaviour
 
         if(worldCoordinates.y < transform.position.y || worldCoordinates.y > transform.position.y + 2) return;
 
+        SetArrowsVisible(false);
+
         worldCoordinates.y = transform.position.y;
 
         transform.position = worldCoordinates;
@@ -87,6 +98,9 @@ public class PlayerController : MonoBehaviour
     public async void RunAndShoot()
     {
         if(gameState != GameState.Idle) return;
+
+        SetArrowsVisible(false);
+        ballController.HideTargetArrows();
 
         GameManager.Instance.UpdateGameState(GameState.GoingToShoot);
 
@@ -102,7 +116,7 @@ public class PlayerController : MonoBehaviour
         while(time < 1)
         {
             time += Time.deltaTime * power;
-            transform.position = Vector3.Lerp(startPosition, targetPosition, time);
+            transform.position = GlobalTools.GetPointInLine(startPosition, targetPosition, time);
             await Task.Delay(1);
         }
 
@@ -114,7 +128,7 @@ public class PlayerController : MonoBehaviour
         while(time < 1)
         {
             time += Time.deltaTime / 2;
-            transform.position = Vector3.Lerp(targetPosition, startPosition, time);
+            transform.position = GlobalTools.GetPointInLine(targetPosition, startPosition, time);
             await Task.Delay(1);
         }
     }
@@ -141,6 +155,12 @@ public class PlayerController : MonoBehaviour
     {
         target.position = new Vector3(inverted * transform.position.x, target.position.y, target.position.z);
         ballController.UpdateLineRenderer();
+    }
+
+    private void SetArrowsVisible(bool visible)
+    {
+        leftArrow.SetActive(visible);
+        rightArrow.SetActive(visible);
     }
 
     #endregion Helper Methods

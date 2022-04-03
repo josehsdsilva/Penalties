@@ -72,10 +72,9 @@ public class GameManager : MonoBehaviour
         UpdateGameState(GameState.Reset);
     }
 
-    public void ResetGame()
+    public void ResetStatistics()
     {
-        UpdateGameState(GameState.GameReset);
-        UpdateGameState(GameState.Reset);
+        UIManager.Instance.Reset();
     }
 
     public void QuitGame()

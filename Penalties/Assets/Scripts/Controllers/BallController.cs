@@ -20,6 +20,9 @@ public class BallController : MonoBehaviour
     private Vector3 startPosition;
     private Vector3 targetPosition;
     private SpriteRenderer spriteRenderer;
+
+    
+    private KeeperController keeperController;
     private float shootingPower;
 
     #endregion Variables
@@ -32,6 +35,7 @@ public class BallController : MonoBehaviour
 
         mainCamera = Camera.main;
         target = FindObjectOfType<TargetController>();
+        keeperController = FindObjectOfType<KeeperController>();
         lineRenderer = GetComponent<LineRenderer>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -95,13 +99,15 @@ public class BallController : MonoBehaviour
         targetPosition = GetRealTargetPosition(target.transform.position, power);
         target.gameObject.SetActive(false);
 
+        keeperController.GoingToShoot(power, targetPosition);
+
         ChangeSortingLayer(targetPosition);
 
         float time = 0;
         while(time < 1)
         {
             time += Time.deltaTime * power * 1.5f;
-            if(gameState != GameState.Saved) transform.position = GetPointInLine(startPosition, targetPosition, time);
+            if(gameState != GameState.Saved) transform.position = GlobalTools.GetPointInLine(startPosition, targetPosition, time, inverted);
             await Task.Delay(1);
         }
 
@@ -139,21 +145,10 @@ public class BallController : MonoBehaviour
         Vector3[] line = new Vector3[linePoints];
         for (int i = 0; i < linePoints; i++)
         {
-            line[i] = GetPointInLine( transform.position, target.transform.position, (i + 1) / (float)linePoints);
+            line[i] = GlobalTools.GetPointInLine(transform.position, target.transform.position, (i + 1) / (float)linePoints, inverted);
         }
         lineRenderer.positionCount = linePoints;
         lineRenderer.SetPositions(line);
-    }
-
-    private Vector3 GetPointInLine(Vector3 startPos, Vector3 endPos, float t)
-    {
-        Vector3 midPos = new Vector3(startPos.x - inverted * (endPos.x - startPos.x), (startPos.y + endPos.y) / 2, (startPos.z + endPos.z) / 2);
-
-        float x = ((1 - t) * (1 - t) * startPos.x) + (2 * t * (1 - t) * midPos.x) + (t * t * endPos.x);
-        float y = ((1 - t) * (1 - t) * startPos.y) + (2 * t * (1 - t) * midPos.y) + (t * t * endPos.y);
-        float z = startPos.z + (t * (endPos.z - startPos.z));
-
-        return new Vector3(x, y, z);
     }
 
     private Vector3 GetRealTargetPosition(Vector3 targetPos, float power)
@@ -172,7 +167,14 @@ public class BallController : MonoBehaviour
         if(saved) spriteRenderer.sortingOrder = 2;
         else spriteRenderer.sortingOrder = targetPos.y < trave.position.y && targetPos.x > posteEsquerdo.position.x + goalOffet && targetPos.x < posteDireito.position.x - goalOffet ? -1 : 2;
     }
+
+
+    public void HideTargetArrows()
+    {
+        target.SetArrowsVisible(false);
+    }
     
     #endregion Helper Methods
+
 
 }

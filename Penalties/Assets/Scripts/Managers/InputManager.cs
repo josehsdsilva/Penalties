@@ -14,6 +14,8 @@ public class InputManager : MonoBehaviour
 
     public delegate void StartTouchEvent(Vector2 position);
     public event StartTouchEvent OnStartTouch;
+    public delegate void EndTouchEvent(bool visible);
+    public event EndTouchEvent OnEndTouch;
 
     private TouchControls touchControls;
 
@@ -79,7 +81,8 @@ public class InputManager : MonoBehaviour
     }
 
     private void EndTouch(InputAction.CallbackContext context)
-    {        
+    {
+        OnEndTouch?.Invoke(true);
         if(OnStartTouch != null)
         {
             StopCoroutine(touching);
