@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
         {
             case GameState.Idle:
                 break;
+            case GameState.OnSettings:
+                break;
             case GameState.GoingToShoot:
                 break;
             case GameState.KeeperReady:
@@ -67,11 +69,6 @@ public class GameManager : MonoBehaviour
         OnGameStateChanged?.Invoke(newState);
     }
 
-    public void NextPenaltie()
-    {
-        UpdateGameState(GameState.Reset);
-    }
-
     public void ResetStatistics()
     {
         UIManager.Instance.Reset();
@@ -93,11 +90,13 @@ public class GameManager : MonoBehaviour
 public enum GameState
 {
     Idle,
+    OnSettings,
     GoingToShoot,
     KeeperReady,
     Shooting,
     Scored,
     Saved,
+    Animation,
     Reset,
     GameReset
 }

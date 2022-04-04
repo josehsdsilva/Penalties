@@ -18,9 +18,9 @@ public class GlobalTools : MonoBehaviour
             throw new TimeoutException();
     }
 
-    public static async Task WaitForSeconds(int seconds)
+    public static async Task WaitForSeconds(float seconds)
     {
-        await Task.Delay(seconds * 1000);
+        await Task.Delay((int)(seconds * 1000));
     }
 
     public static async Task WaitForFrames(int frames)

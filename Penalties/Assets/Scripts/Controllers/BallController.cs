@@ -127,6 +127,13 @@ public class BallController : MonoBehaviour
             }
         }
 
+        // if(goals > 3) GameManager.Instance.UpdateGameState(GameState.Animation);
+        // else
+        {
+            await GlobalTools.WaitForSeconds(2);
+            GameManager.Instance.UpdateGameState(GameState.Reset);
+        }
+
         await GlobalTools.WaitUntil(() => gameState == GameState.Reset);
         
         target.gameObject.SetActive(true);

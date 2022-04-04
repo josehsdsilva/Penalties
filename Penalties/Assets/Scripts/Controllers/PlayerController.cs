@@ -151,8 +151,6 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateTargetAndLine()
     {
-        Debug.Log(shootingDirection);
-        Debug.Log(ballController.shootingDirection);
         target.position = new Vector3(shootingDirection * transform.position.x, target.position.y, target.position.z);
         ballController.UpdateLineRenderer();
     }
