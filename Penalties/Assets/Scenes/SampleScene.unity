@@ -210,9 +210,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dfad8bdd3c8e4a40aa9e638c64e3534, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  posteEsquerdo: {fileID: 1135411199}
-  trave: {fileID: 545956496}
-  posteDireito: {fileID: 1341280483}
+  leftPost: {fileID: 1135411199}
+  crossbar: {fileID: 545956496}
+  rightPost: {fileID: 1341280483}
   baliza: {fileID: 1648645046}
   upArrow: {fileID: 987601463}
   downArrow: {fileID: 2082272043}
@@ -274,14 +274,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 16185141}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.74, y: 3.21, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.0552351, y: 7.7363267, z: 0.05470666}
   m_LocalScale: {x: 0.075, y: 0.075, z: 1}
   m_Children:
   - {fileID: 987601464}
   - {fileID: 2082272044}
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_Father: {fileID: 1710326824}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &48920821
 GameObject:
@@ -489,7 +489,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -26.099976, y: 0}
+  m_AnchoredPosition: {x: -26.099854, y: 0}
   m_SizeDelta: {x: 20, y: 160}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &100125644
@@ -545,7 +545,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1567327199}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: SetPower
+        m_MethodName: SetShootingPower
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -568,7 +568,7 @@ GameObject:
   - component: {fileID: 162314584}
   - component: {fileID: 162314583}
   m_Layer: 5
-  m_Name: "Pr\xF3ximo Pen\xE1lti"
+  m_Name: Next Penalty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -770,7 +770,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "For\xE7a de\nremate"
+  m_Text: Shooting Power
 --- !u!222 &307506169
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -792,7 +792,7 @@ GameObject:
   - component: {fileID: 363415932}
   - component: {fileID: 363415931}
   m_Layer: 5
-  m_Name: Reiniciar Valores
+  m_Name: Reset Statistics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1398,8 +1398,8 @@ GameObject:
   - component: {fileID: 545956497}
   - component: {fileID: 545956498}
   m_Layer: 0
-  m_Name: Trave
-  m_TagString: Baliza
+  m_Name: Crossbar
+  m_TagString: Goal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1608,7 +1608,7 @@ Transform:
   - {fileID: 423678265}
   - {fileID: 2003789872}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &810460391
 GameObject:
@@ -1623,7 +1623,7 @@ GameObject:
   - component: {fileID: 810460394}
   - component: {fileID: 810460393}
   m_Layer: 5
-  m_Name: Rematar
+  m_Name: Shoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1963,7 +1963,7 @@ GameObject:
   - component: {fileID: 878232356}
   - component: {fileID: 878232355}
   m_Layer: 5
-  m_Name: Inverter remate
+  m_Name: Invert Shooting Direction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2035,7 +2035,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1567327199}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: ToggleInverted
+        m_MethodName: InvertShootingDirection
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2094,7 +2094,7 @@ GameObject:
   - component: {fileID: 883477530}
   - component: {fileID: 883477531}
   m_Layer: 0
-  m_Name: GR
+  m_Name: GK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2108,7 +2108,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 883477529}
   m_LocalRotation: {x: -0, y: -0, z: 0.0000002533197, w: 1}
-  m_LocalPosition: {x: -0, y: 2, z: 0}
+  m_LocalPosition: {x: 0.6847648, y: 6.5263267, z: 0.05470666}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1315352632}
@@ -2118,8 +2118,8 @@ Transform:
   - {fileID: 428602322}
   - {fileID: 826918003}
   - {fileID: 1562128814}
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 1710326824}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &883477531
 MonoBehaviour:
@@ -2133,8 +2133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 790eaa230e9029344b133a743c6e6be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  posteEsquerdo: {fileID: 1135411199}
-  posteDireito: {fileID: 1341280483}
+  leftPost: {fileID: 1135411199}
+  rightPost: {fileID: 1341280483}
 --- !u!1 &910292317
 GameObject:
   m_ObjectHideFlags: 0
@@ -2230,8 +2230,8 @@ RectTransform:
   - {fileID: 878232354}
   - {fileID: 810460392}
   - {fileID: 1935259824}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 2047396061}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2308,7 +2308,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Inverter dire\xE7\xE3o do remate"
+  m_Text: Invert Shooting Direction
 --- !u!222 &934911045
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2629,8 +2629,8 @@ GameObject:
   - component: {fileID: 1135411200}
   - component: {fileID: 1135411201}
   m_Layer: 0
-  m_Name: PosteEsquerdo
-  m_TagString: Baliza
+  m_Name: LeftPost
+  m_TagString: Goal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2878,7 +2878,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Reiniciar Valores
+  m_Text: Reset Statistics
 --- !u!222 &1162985561
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2902,7 +2902,7 @@ GameObject:
   - component: {fileID: 1222818084}
   - component: {fileID: 1222818085}
   m_Layer: 0
-  m_Name: Bola
+  m_Name: Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2966,12 +2966,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1222818079}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.95, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.6847648, y: 2.5763266, z: 0.05470666}
   m_LocalScale: {x: 0.075, y: 0.075, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1710326824}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1222818082
 MonoBehaviour:
@@ -2985,10 +2985,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46cbd81db77354740a847d87257decba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  posteEsquerdo: {fileID: 1135411199}
-  posteDireito: {fileID: 1341280483}
-  trave: {fileID: 545956496}
-  inverted: -1
+  leftPost: {fileID: 1135411199}
+  rightPost: {fileID: 1341280483}
+  crossbar: {fileID: 545956496}
+  shootingDirection: -1
 --- !u!120 &1222818083
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -3082,7 +3082,7 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 0
+    textureMode: 3
     shadowBias: 0.5
     generateLightingData: 0
   m_UseWorldSpace: 1
@@ -3218,8 +3218,8 @@ GameObject:
   - component: {fileID: 1341280484}
   - component: {fileID: 1341280485}
   m_Layer: 0
-  m_Name: PosteDireito
-  m_TagString: Baliza
+  m_Name: RightPost
+  m_TagString: Goal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3466,7 +3466,7 @@ GameObject:
   - component: {fileID: 1567327199}
   - component: {fileID: 1567327200}
   m_Layer: 0
-  m_Name: Jogador
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3480,7 +3480,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1567327197}
   m_LocalRotation: {x: -0, y: -0, z: 0.0000002533197, w: 1}
-  m_LocalPosition: {x: -0.68, y: -5.46, z: 0}
+  m_LocalPosition: {x: 0.0047647953, y: -0.9336734, z: 0.05470666}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 472993281}
@@ -3489,8 +3489,8 @@ Transform:
   - {fileID: 1141377102}
   - {fileID: 555200524}
   - {fileID: 1451133346}
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 1710326824}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1567327199
 MonoBehaviour:
@@ -3506,6 +3506,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftArrow: {fileID: 1451133345}
   rightArrow: {fileID: 555200523}
+  shootingDirection: -1
 --- !u!61 &1567327200
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3591,12 +3592,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1634392505}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.6847648, y: 4.5263267, z: 0.05470666}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 2047396061}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1648645045
 GameObject:
@@ -3608,7 +3609,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1648645046}
   m_Layer: 0
-  m_Name: Baliza
+  m_Name: Goal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3621,15 +3622,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1648645045}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.6847648, y: 6.5263267, z: 0.05470666}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1135411199}
   - {fileID: 1341280483}
   - {fileID: 545956496}
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_Father: {fileID: 1710326824}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1658618855
 GameObject:
@@ -3701,7 +3702,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Rematar
+  m_Text: Shoot
 --- !u!222 &1658618858
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3710,6 +3711,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1658618855}
   m_CullTransparentMesh: 1
+--- !u!1 &1710326823
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1710326824}
+  m_Layer: 0
+  m_Name: Game Objects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1710326824
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710326823}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.6847648, y: -4.5263267, z: -0.05470666}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 16185144}
+  - {fileID: 1648645046}
+  - {fileID: 883477530}
+  - {fileID: 1222818081}
+  - {fileID: 1567327198}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1724318945
 GameObject:
   m_ObjectHideFlags: 0
@@ -3827,7 +3863,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Pr\xF3ximo Pen\xE1lti"
+  m_Text: Next Penalty
 --- !u!222 &1825757049
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4042,6 +4078,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statisticsPanel: {fileID: 1935259823}
   statisticsText: {fileID: 460452423}
+--- !u!1 &2047396060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2047396061}
+  m_Layer: 0
+  m_Name: UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2047396061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047396060}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.6847648, y: -4.5263267, z: -0.05470666}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 910292321}
+  - {fileID: 1634392508}
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2082272043
 GameObject:
   m_ObjectHideFlags: 0

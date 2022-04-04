@@ -51,11 +51,18 @@ public class UIManager : MonoBehaviour
         UpdateUI();
     }
 
-    private async void UpdateUI()
+    private void UpdateUI()
     {
         statisticsPanel.SetActive(true);
-        double percentage = Math.Round(((double)scored / (double)goalAttempts) * 100, 2);
-        statisticsText.text = $"Golos Marcados: {scored} / {goalAttempts} \nPercentagem de acerto: {percentage}%";
+        if(goalAttempts == 0)
+        {
+            statisticsText.text = "Shoot to start the statistics!";
+        }
+        else
+        {
+            double percentage = Math.Round(((double)scored / (double)goalAttempts) * 100, 2);
+            statisticsText.text = $"Golos Marcados: {scored} / {goalAttempts} \nPercentagem de acerto: {percentage}%";
+        }
     }
 
     #endregion Update UI

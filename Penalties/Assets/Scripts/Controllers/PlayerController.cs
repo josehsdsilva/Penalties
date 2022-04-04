@@ -15,8 +15,8 @@ public class PlayerController : MonoBehaviour
     private BallController ballController;
     private Transform target;
     private Vector3 startPosition, targetPosition;
-    private float power = 1;
-    private int inverted = -1;
+    private float shootingPower = 1;
+    private int shootingDirection = -1;
 
     private bool firstClick = true;
 
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
     #region Input Methods
 
-    // Posicionar o Jogador
+    // Position the player
     private void PositionWithInput(Vector2 screenPosition)
     {
         if(firstClick)
@@ -106,24 +106,24 @@ public class PlayerController : MonoBehaviour
 
         ballController.ShowLineRenderer(false);
 
-        // Esperar até o GK estar pronto
+        // Wait until the keeper is ready
         await GlobalTools.WaitUntil(() => gameState == GameState.KeeperReady);
 
-        // Correr até à bola
+        // Run to the ball
         startPosition = transform.position;
         targetPosition = ballController.transform.position;
         float time = 0;
         while(time < 1)
         {
-            time += Time.deltaTime * power;
+            time += Time.deltaTime * shootingPower;
             transform.position = GlobalTools.GetPointInLine(startPosition, targetPosition, time);
             await Task.Delay(1);
         }
 
-        // Chutar a bola
-        ballController.Shoot(power);
+        // Kick the ball
+        ballController.Shoot(shootingPower);
 
-        // Voltar à posição inicial
+        // Go back to starting position
         time = 0;
         while(time < 1)
         {
@@ -133,17 +133,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Definir a força de remate
-    public void SetPower(float _power)
+    public void SetShootingPower(float power)
     {
-        power = 1 + _power * 2;
+        shootingPower = 1 + power * 2;
     }
 
-    // Inverter a direção do remate
-    public void ToggleInverted()
+    public void InvertShootingDirection()
     {
-        inverted *= -1;
-        ballController.inverted *= -1;
+        shootingDirection *= -1;
+        ballController.shootingDirection *= -1;
         UpdateTargetAndLine();
     }
 
@@ -153,7 +151,9 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateTargetAndLine()
     {
-        target.position = new Vector3(inverted * transform.position.x, target.position.y, target.position.z);
+        Debug.Log(shootingDirection);
+        Debug.Log(ballController.shootingDirection);
+        target.position = new Vector3(shootingDirection * transform.position.x, target.position.y, target.position.z);
         ballController.UpdateLineRenderer();
     }
 

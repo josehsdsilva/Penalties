@@ -4,7 +4,7 @@ public class TargetController : MonoBehaviour
 {
     #region Variables
 
-    [SerializeField] private Transform posteEsquerdo, trave, posteDireito, baliza;
+    [SerializeField] private Transform leftPost, crossbar, rightPost, baliza;
     [SerializeField] private GameObject upArrow, downArrow;
 
     private GameState gameState;
@@ -63,7 +63,7 @@ public class TargetController : MonoBehaviour
         worldCoordinates.x = transform.position.x; 
         worldCoordinates.z = transform.position.z;
 
-        if(worldCoordinates.y < baliza.position.y || worldCoordinates.y > trave.position.y) return;
+        if(worldCoordinates.y < baliza.position.y || worldCoordinates.y > crossbar.position.y) return;
 
         SetArrowsVisible(false);
 

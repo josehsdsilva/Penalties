@@ -7,7 +7,7 @@ public class KeeperController : MonoBehaviour
 {
     #region Variables
 
-    [SerializeField] private Transform posteEsquerdo, posteDireito;
+    [SerializeField] private Transform leftPost, rightPost;
 
     private GameState gameState;
 
@@ -121,7 +121,7 @@ public class KeeperController : MonoBehaviour
 
     private void UpdateTargetPosition()
     {
-        targetPosition = side == 0 ? new Vector3(posteEsquerdo.position.x + 0.5f, transform.position.y, transform.position.z) : new Vector3(posteDireito.position.x - 0.5f, transform.position.y, transform.position.z);
+        targetPosition = side == 0 ? new Vector3(leftPost.position.x + 0.5f, transform.position.y, transform.position.z) : new Vector3(rightPost.position.x - 0.5f, transform.position.y, transform.position.z);
     }
 
     private void GetDefendingPosition(float shootingPower, Vector3 position)
@@ -130,7 +130,7 @@ public class KeeperController : MonoBehaviour
         if(randomRange < shootingPower * 100)
         {
             randomRange = Random.Range(0, 5) + 1;
-            float randomX = posteEsquerdo.position.x + (randomRange * (posteDireito.position.x / 3));
+            float randomX = leftPost.position.x + (randomRange * (rightPost.position.x / 3));
             targetPosition = new Vector3(randomX, transform.position.y, transform.position.z);
         }
         else

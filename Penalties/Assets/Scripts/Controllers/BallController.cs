@@ -7,8 +7,8 @@ public class BallController : MonoBehaviour
 {
     #region Variables
 
-    [SerializeField] private Transform posteEsquerdo, posteDireito, trave;
-    private float goalOffet = 0.35f;
+    [SerializeField] private Transform leftPost, rightPost, crossbar;
+    private float goalOffset = 0.35f;
 
     private GameState gameState;
 
@@ -16,7 +16,7 @@ public class BallController : MonoBehaviour
 
     private TargetController target;
     private LineRenderer lineRenderer;
-    [HideInInspector] public int inverted = 1;
+    [HideInInspector] public int shootingDirection = -1;
     private Vector3 startPosition;
     private Vector3 targetPosition;
     private SpriteRenderer spriteRenderer;
@@ -68,16 +68,20 @@ public class BallController : MonoBehaviour
     {
         if(gameState != GameState.Shooting) return;
 
-        if(collision.gameObject.tag == "Baliza")
+        if(collision.gameObject.tag == "Goal") // if the ball hits the woodwork
         {
             ChangeSortingLayer(Vector3.zero, true);
             GameManager.Instance.UpdateGameState(GameState.Saved);
         }
-        else if(collision.gameObject.tag == "Player")
+        else if(collision.gameObject.tag == "Player") // if the ball hits the player
         {
-            if(shootingPower > 2f) // Pelo menos meia barra de força
+            ChangeSortingLayer(Vector3.zero, true);
+            GameManager.Instance.UpdateGameState(GameState.Reset);
+        }
+        {
+            if(shootingPower > 2f) // If the shooting power is at least at 50%
             {
-                if(Random.Range(0, 100) < 50 / 3 * shootingPower) // 50% de chance de ser golo com a força maxima
+                if(Random.Range(0, 100) < 50 / 3 * shootingPower) // the keeper have a 50% chance to defend the ball if the shooting power is at 100%
                 {
                     GameManager.Instance.UpdateGameState(GameState.Scored);
                     return;
@@ -96,7 +100,7 @@ public class BallController : MonoBehaviour
     {
         shootingPower = power;
         GameManager.Instance.UpdateGameState(GameState.Shooting);
-        targetPosition = GetRealTargetPosition(target.transform.position, power);
+        targetPosition = GetRealTargetPosition(target.transform.position);
         target.gameObject.SetActive(false);
 
         keeperController.GoingToShoot(power, targetPosition);
@@ -107,7 +111,7 @@ public class BallController : MonoBehaviour
         while(time < 1)
         {
             time += Time.deltaTime * power * 1.5f;
-            if(gameState != GameState.Saved) transform.position = GlobalTools.GetPointInLine(startPosition, targetPosition, time, inverted);
+            if(gameState != GameState.Saved) transform.position = GlobalTools.GetPointInLine(startPosition, targetPosition, time, shootingDirection);
             await Task.Delay(1);
         }
 
@@ -141,22 +145,23 @@ public class BallController : MonoBehaviour
 
     public void UpdateLineRenderer()
     {
-        int linePoints = 20;
+        int linePoints = 40;
         Vector3[] line = new Vector3[linePoints];
         for (int i = 0; i < linePoints; i++)
         {
-            line[i] = GlobalTools.GetPointInLine(transform.position, target.transform.position, (i + 1) / (float)linePoints, inverted);
+            line[i] = GlobalTools.GetPointInLine(transform.position, target.transform.position, (i + 1) / (float)linePoints, shootingDirection);
         }
         lineRenderer.positionCount = linePoints;
         lineRenderer.SetPositions(line);
     }
 
-    private Vector3 GetRealTargetPosition(Vector3 targetPos, float power)
+    private Vector3 GetRealTargetPosition(Vector3 targetPos)
     {
-        if(power == 1) return targetPos;
+        if(shootingPower == 1) return targetPos;
 
-        float x = ((Random.Range(0, 1) * 2) - 1) * Random.Range(0, power / 6);
-        float y = Random.Range(0, power / 6);
+        // Setting how much the ball will offset based on shooting power
+        float x = ((Random.Range(0, 1) * 2) - 1) * Random.Range(0, shootingPower / 6);
+        float y = Random.Range(0, shootingPower / 6);
         Vector3 offset = new Vector3(x, y, targetPos.z);
 
         return targetPos + offset;
@@ -165,7 +170,7 @@ public class BallController : MonoBehaviour
     private void ChangeSortingLayer(Vector3 targetPos, bool saved = false)
     {
         if(saved) spriteRenderer.sortingOrder = 2;
-        else spriteRenderer.sortingOrder = targetPos.y < trave.position.y && targetPos.x > posteEsquerdo.position.x + goalOffet && targetPos.x < posteDireito.position.x - goalOffet ? -1 : 2;
+        else spriteRenderer.sortingOrder = targetPos.y < crossbar.position.y && targetPos.x > leftPost.position.x + goalOffset && targetPos.x < rightPost.position.x - goalOffset ? -1 : 2;
     }
 
 
