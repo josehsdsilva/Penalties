@@ -39,6 +39,7 @@ public class BallController : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
+        ShowLineRenderer(true);
         UpdateLineRenderer();
         startPosition = transform.position;
     }
