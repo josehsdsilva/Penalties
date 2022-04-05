@@ -99,6 +99,8 @@ public class PlayerController : MonoBehaviour
     {
         if(gameState != GameState.Idle) return;
 
+        SoundManager.Instance.PlaySound("whistle");
+
         SetArrowsVisible(false);
         ballController.HideTargetArrows();
 
@@ -108,6 +110,7 @@ public class PlayerController : MonoBehaviour
 
         // Wait until the keeper is ready
         await GlobalTools.WaitUntil(() => gameState == GameState.KeeperReady);
+
 
         // Run to the ball
         startPosition = transform.position;

@@ -56,6 +56,8 @@ public class CupController : MonoBehaviour
         confetti.gameObject.SetActive(true);
         confetti.Play();
 
+        SoundManager.Instance.PlaySound("victory");
+
         float time = 0;
         while(time < 1)
         {
