@@ -59,7 +59,7 @@ public class KeeperController : MonoBehaviour
         float time = 0;
         while(time < 1)
         {
-            time += Time.deltaTime;
+            if(gameState != GameState.OnSettings) time += Time.deltaTime;
             transform.position = Vector3.Lerp(startPosition, targetPosition, time);
             await Task.Delay(1);
         }
@@ -86,8 +86,6 @@ public class KeeperController : MonoBehaviour
 
     private async void TryToDefend()
     {
-        
-
         float time = 0;
         while(time < 1)
         {

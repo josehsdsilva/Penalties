@@ -14,14 +14,19 @@ public class UIManager : MonoBehaviour
 
     #region Variables
 
-    [SerializeField] private Transform settingsButton, resetButton, quitButton;
+    [SerializeField] private RectTransform settingsButton, resetButton, quitButton;
     [SerializeField] private Text scoredText, percentageText, attemptsText;
 
-    private int attempts, scored;
-
-    private bool settingsOpened = false, animating = false;
+    private bool settingsOpened = false;
+    private bool animating = false;
 
     private Vector2 resetButtonPosition, quitButtonPosition, settingsButtonPosition;
+
+    private int lastScreenWidth = 0;
+    private int lastScreenHeight = 0;
+
+    public delegate void ScreenSizeChangedEvent();
+    public event ScreenSizeChangedEvent OnScreenSizeChangedEvent;
 
     #endregion Variables
 
@@ -35,39 +40,45 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         UpdateUI();
-        settingsButtonPosition = settingsButton.position;
-        resetButtonPosition = resetButton.transform.position;
-        quitButtonPosition = quitButton.transform.position;
+        OnScreenSizeChangedEvent += OnScreenSizeChanged;
+    }
+ 
+    private void FixedUpdate()
+    {
+        if (lastScreenWidth != Screen.width || lastScreenHeight != Screen.height)
+        {
+            lastScreenWidth = Screen.width;
+            lastScreenHeight = Screen.height;
+            OnScreenSizeChangedEvent.Invoke();
+        }
     }
 
     #endregion MonoBehaviour
 
     #region Update UI
 
-    public void Scored()
+    public void OnScreenSizeChanged()
     {
-        attempts++;
-        scored++;
-        UpdateUI();
+        settingsButtonPosition = settingsButton.anchoredPosition;
+        resetButtonPosition = settingsButtonPosition + new Vector2(0, 30);
+        quitButtonPosition = settingsButtonPosition + new Vector2(0, 60);
+
+        if(settingsOpened)
+        {
+            resetButton.anchoredPosition = resetButtonPosition;
+            quitButton.anchoredPosition = quitButtonPosition;
+        }
+        else
+        {
+            resetButton.anchoredPosition = settingsButtonPosition;
+            quitButton.anchoredPosition = settingsButtonPosition;
+        }
     }
 
-    public void Saved()
-    {
-        attempts++;
-        UpdateUI();
-    }
-
-    public void Reset()
-    {
-        attempts = 0;
-        scored = 0;
-        UpdateUI();
-    }
-
-    private void UpdateUI()
+    public void UpdateUI(int scored = 0, int attempts = 0)
     {
         scoredText.text = $"Scored - {scored}";
-        percentageText.text = attempts == 0 ? "" : ((float)scored / (float)attempts * 100).ToString("0.00") + "%";
+        percentageText.text = attempts == 0 ? "" : Math.Round(((double)scored / (double)attempts) * 100, 2).ToString() + "%";
         attemptsText.text = $"{attempts} - Attempts";
     }
 
@@ -83,7 +94,7 @@ public class UIManager : MonoBehaviour
             while(time < 1)
             {
                 time += Time.deltaTime * 2;
-                quitButton.position = Vector3.Lerp(quitButtonPosition, resetButtonPosition, time);
+                quitButton.anchoredPosition = Vector3.Lerp(quitButtonPosition, resetButtonPosition, time);
                 await Task.Delay(1);
             }
             quitButton.gameObject.SetActive(false);
@@ -91,7 +102,7 @@ public class UIManager : MonoBehaviour
             while(time < 1)
             {
                 time += Time.deltaTime * 2;
-                resetButton.position = Vector3.Lerp(resetButtonPosition, settingsButtonPosition, time);
+                resetButton.anchoredPosition = Vector3.Lerp(resetButtonPosition, settingsButtonPosition, time);
                 await Task.Delay(1);
             }
             resetButton.gameObject.SetActive(false);
@@ -105,7 +116,7 @@ public class UIManager : MonoBehaviour
             while(time < 1)
             {
                 time += Time.deltaTime * 2;
-                resetButton.position = Vector3.Lerp(settingsButtonPosition, resetButtonPosition, time);
+                resetButton.anchoredPosition = Vector3.Lerp(settingsButtonPosition, resetButtonPosition, time);
                 await Task.Delay(1);
             }
             quitButton.gameObject.SetActive(true);
@@ -113,7 +124,7 @@ public class UIManager : MonoBehaviour
             while(time < 1)
             {
                 time += Time.deltaTime * 2;
-                quitButton.position = Vector3.Lerp(resetButtonPosition, quitButtonPosition, time);
+                quitButton.anchoredPosition = Vector3.Lerp(resetButtonPosition, quitButtonPosition, time);
                 await Task.Delay(1);
             }
         }

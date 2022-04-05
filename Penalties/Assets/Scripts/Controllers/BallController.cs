@@ -75,10 +75,6 @@ public class BallController : MonoBehaviour
         }
         else if(collision.gameObject.tag == "Player") // if the ball hits the player
         {
-            ChangeSortingLayer(Vector3.zero, true);
-            GameManager.Instance.UpdateGameState(GameState.Reset);
-        }
-        {
             if(shootingPower > 2f) // If the shooting power is at least at 50%
             {
                 if(Random.Range(0, 100) < 50 / 3 * shootingPower) // the keeper have a 50% chance to defend the ball if the shooting power is at 100%
@@ -127,16 +123,10 @@ public class BallController : MonoBehaviour
             }
         }
 
-        // if(goals > 3) GameManager.Instance.UpdateGameState(GameState.Animation);
-        // else
-        {
-            await GlobalTools.WaitForSeconds(2);
-            GameManager.Instance.UpdateGameState(GameState.Reset);
-        }
-
         await GlobalTools.WaitUntil(() => gameState == GameState.Reset);
         
         target.gameObject.SetActive(true);
+        target.SetArrowsVisible(true);
         transform.position = startPosition;
         ShowLineRenderer(true);
     }

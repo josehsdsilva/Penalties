@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     public static event Action<GameState> OnGameStateChanged;
 
+    private int attempts, scored, streak;
+
     #endregion Variables
 
     #region MonoBehaviour
@@ -52,15 +54,14 @@ public class GameManager : MonoBehaviour
             case GameState.Shooting:
                 break;
             case GameState.Scored:
-                UIManager.Instance.Scored();
+                OnScored();
                 break;
             case GameState.Saved:
-                UIManager.Instance.Saved();
+                OnSaved();
                 break;
             case GameState.Reset:
                 break;
-            case GameState.GameReset:
-                UIManager.Instance.Reset();
+            case GameState.Animation:
                 break;
            default:
                 throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
@@ -69,9 +70,43 @@ public class GameManager : MonoBehaviour
         OnGameStateChanged?.Invoke(newState);
     }
 
+    private async void OnScored()
+    {
+        attempts++;
+        scored++;
+        streak++;
+        UIManager.Instance.UpdateUI(scored, attempts);
+        if(streak >= 3)
+        {
+            streak = 0;
+            UpdateGameState(GameState.Animation);
+        }
+        else
+        {
+            await GlobalTools.WaitForSeconds(2);
+            UpdateGameState(GameState.Reset);
+        }
+    }
+
+    private async void OnSaved()
+    {
+        attempts++;
+        streak = 0;
+        UIManager.Instance.UpdateUI(scored, attempts);
+        await GlobalTools.WaitForSeconds(2);
+        UpdateGameState(GameState.Reset);
+    }
+
+    #endregion GameState
+
+    #region Helper Methods
+
     public void ResetStatistics()
     {
-        UIManager.Instance.Reset();
+        attempts = 0;
+        scored = 0;
+        streak = 0;
+        UIManager.Instance.UpdateUI(scored, attempts);
     }
 
     public void QuitGame()
@@ -83,7 +118,7 @@ public class GameManager : MonoBehaviour
         #endif
     }
 
-    #endregion GameState
+    #endregion Helper Methods
 }
 
 #region GameState Enum
@@ -98,7 +133,6 @@ public enum GameState
     Saved,
     Animation,
     Reset,
-    GameReset
 }
 
 #endregion GameState Enum

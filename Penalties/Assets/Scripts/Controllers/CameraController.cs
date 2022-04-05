@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
     {   
         cam = GetComponent<Camera>();
         CalculateOrthoSize();
+        UIManager.Instance.OnScreenSizeChangedEvent += CalculateOrthoSize;
     }
 
     private void CalculateOrthoSize()
@@ -26,7 +27,7 @@ public class CameraController : MonoBehaviour
         var vertical = bounds.size.y;
         var horizontal = bounds.size.x * cam.pixelHeight / cam.pixelWidth;
 
-        var size = Mathf.Max(horizontal, vertical) * 0.6f;
+        var size = Mathf.Max(horizontal, vertical) * 0.65f;
         var center = bounds.center + new Vector3(0, 0, -10);
 
         cam.transform.position = center;
